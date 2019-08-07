@@ -14,17 +14,19 @@ class inputNotebookEntry:
         inputEntry = open(self.source_file, 'r')
         outputEntry = open('output1.tex','w')
 
-        # Convert the top-level heading to a 'paragraph' LaTeX heading
-        # This conversion is specific to these notebook files and not canonical
         for line in inputEntry:
+
+            # Convert the top-level heading to a 'paragraph' LaTeX heading
+            # This conversion is specific to these notebook files and not canonical
             if '# ' in line: 
                 print line[2:]
                 timeEntryLine = '\paragraph{' + line[2:].rstrip() +'}\n'
 
                 outputEntry.write(timeEntryLine)
 
-            # Detect italicized notes 
+            # Detect lines that may be italicized or bullet points 
             elif '*' in line:
+
                 print line
                 endPosition = line[1:].find('*')
 
