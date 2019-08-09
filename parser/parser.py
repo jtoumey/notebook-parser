@@ -9,9 +9,20 @@ import subprocess, sys
 
 class inputNotebookEntry:
 
+    
+
     def __init__(self, source_file_):
         
         self.source_file = source_file_
+
+        self.createOutputFileName()
+
+    def createOutputFileName(self):
+
+        periodPosition = self.source_file.find('.')
+
+        self.outputFileName = self.source_file[0:periodPosition] + '.tex'
+
 
     def parseNotebookEntry(self):
         print("Parsing input notebook entry...\n")
@@ -19,7 +30,7 @@ class inputNotebookEntry:
         inputEntry = open(self.source_file, 'r')
         inputEntryLines = inputEntry.readlines()
 
-        outputEntry = open('output1.tex','w')
+        outputEntry = open(self.outputFileName,'w')
 
         lineNumber = 0
 
