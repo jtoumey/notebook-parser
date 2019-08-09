@@ -27,7 +27,7 @@ class inputNotebookEntry:
 
             print('Line number: %i' % lineNumber)
             line = inputEntryLines[lineNumber]
-            
+
             # Convert the top-level heading to a 'paragraph' LaTeX heading
             # This conversion is specific to these notebook files and not canonical
             if '# ' in line: 
@@ -62,7 +62,21 @@ class inputNotebookEntry:
 
                             lineNumber = lineNumber + 1
 
-                    projectEntry = '\end{itemize}\n\n'
+                        elif '  + ' in line:
+                            projectEntry = '    \\begin{itemize}\n' + '        \item ' + line[4:].rstrip() + '\n'
+                            outputEntry.write(projectEntry)
+
+                            # Continue looping over the file, seeing if the list continues
+                            for line in inputEntryLines[(lineNumber+1):]:
+                                if '  + ' in line:
+                                    projectEntry = '        \item ' + line[4:].rstrip() + '\n'
+                                    outputEntry.write(projectEntry)
+
+                                    lineNumber = lineNumber + 1
+                            projectEntry = '    \end{itemize}\n'
+                            outputEntry.write(projectEntry)
+
+                    projectEntry = '\end{itemize}\n'
                     outputEntry.write(projectEntry)
 
 
