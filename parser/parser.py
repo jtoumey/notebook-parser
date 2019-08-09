@@ -2,6 +2,11 @@
 
 import subprocess, sys
 
+# class lineRecord:
+
+#     def __init__(self):
+
+
 class inputNotebookEntry:
 
     def __init__(self, source_file_):
@@ -12,14 +17,19 @@ class inputNotebookEntry:
         print("Parsing input notebook entry...\n")
 
         inputEntry = open(self.source_file, 'r')
+        inputEntryLines = inputEntry.readlines()
+
         outputEntry = open('output1.tex','w')
 
-        for line in inputEntry:
+        lineNumber = 0
 
+        for lineNumber in range(0, len(inputEntryLines)):
+
+            print('Line number: %i' % lineNumber)
+            line = inputEntryLines[lineNumber]
             # Convert the top-level heading to a 'paragraph' LaTeX heading
             # This conversion is specific to these notebook files and not canonical
             if '# ' in line: 
-                print line[2:]
                 timeEntryLine = '\paragraph{' + line[2:].rstrip() +'}\n'
 
                 outputEntry.write(timeEntryLine)
@@ -27,16 +37,38 @@ class inputNotebookEntry:
             # Detect lines that may be italicized or bullet points 
             elif '*' in line:
 
-                print line
-                endPosition = line[1:].find('*')
+                numAsterisks = line.count('*')
 
-                projectEntryLine = '\\textit{' + line[1:(endPosition+1)] + '}\n'
+                # Maybe the line is an italics line
+                if numAsterisks == 2:
 
-                outputEntry.write(projectEntryLine)
+                    endPosition = line[1:].find('*')
+
+                    projectEntryLine = '\\textit{' + line[1:(endPosition+1)] + '}\n'
+                    outputEntry.write(projectEntryLine)
+
+                # Perhaps we found the start of a bulleted list
+                elif numAsterisks == 1:
+
+                    projectEntry = '\\begin{itemize}\n' + '    \item ' + line[2:].rstrip() + '\n'
+                    outputEntry.write(projectEntry)
+
+                    # Continue looping over the file, seeing if the list continues
+                    for line in inputEntryLines[(lineNumber+1):]:
+                        if '* ' in line:
+                            projectEntry = '    \item ' + line[2:].rstrip() + '\n'
+                            outputEntry.write(projectEntry)
+
+                            lineNumber = lineNumber + 1
+
+                    projectEntry = '\end{itemize}\n\n'
+                    outputEntry.write(projectEntry)
 
 
             else:
-                outputEntry.write(line.rstrip())
+                outputEntry.write(line.rstrip() + '\n')
+
+            lineNumber = lineNumber + 1
 
 
 
