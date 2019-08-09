@@ -23,10 +23,11 @@ class inputNotebookEntry:
 
         lineNumber = 0
 
-        for lineNumber in range(0, len(inputEntryLines)):
+        while lineNumber < len(inputEntryLines):
 
             print('Line number: %i' % lineNumber)
             line = inputEntryLines[lineNumber]
+            
             # Convert the top-level heading to a 'paragraph' LaTeX heading
             # This conversion is specific to these notebook files and not canonical
             if '# ' in line: 
