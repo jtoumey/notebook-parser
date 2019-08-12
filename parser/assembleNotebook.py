@@ -10,6 +10,8 @@ class Notebook:
     filtered_months = list()
     filtered_days = list()
 
+    daily_entry_matrix = list()
+
     def __init__(self, cwd_):
         self.cwd = cwd_
 
