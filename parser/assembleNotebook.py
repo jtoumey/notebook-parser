@@ -3,6 +3,8 @@
 import os
 import fnmatch
 
+import parser
+
 class Notebook:
 
     directory_list = list()
@@ -15,10 +17,55 @@ class Notebook:
     def __init__(self, cwd_):
         self.cwd = cwd_
 
+    def convertMarkdownEntries(self):
+
+        for filename in self.filtered_days:
+            ext = filename.split('.')[1]
+
+            print ext
+
+            if 'md' in ext: 
+                print filename
+
+                filepath = self.cwd + '/' + self.filtered_years[0] + '/' + self.filtered_months[0] + '/' + filename
+                print filepath
+
+                parser.parseEntry(filepath)
+
+    def writeMainNotebook(self):
+
+        print('*****************************************************')
+        print self.cwd
+
+        main_nb_path = self.cwd + '/mainNb_autoGen.tex'
+        print main_nb_path
+        main_nb = open(main_nb_path, 'w')
+
+        main_nb.write('\\documentclass{article} \n \\begin{document} \n')
+
+        for year in self.filtered_years:
+
+            main_nb.write('\\section{' + year + '}\n')
+
+            for month in self.filtered_months:
+
+                main_nb.write('\\subsection{%s}\n' % month)
+
+                for day in self.filtered_days:
+
+                    if '.tex' in day:
+                        filepath = year + '/' + month + '/' + day
+                        main_nb.write('\\subsubsection{%s}\n\\input{%s}\n' % (month, filepath))
+
+
+        main_nb.write('\n\\end{document}\n')
+        main_nb.close()
+
+
     def generateNotebook(self):
 
         # for (root, dirs, files) in os.walk('/Users/jtoumey/CodeRepositories/active/labNotebook-uconn', topdown=True):
-        for root, subdirs, files in os.walk('/Users/jtoumey/CodeRepositories/active/labNotebook-uconn'):
+        for root, subdirs, files in os.walk(self.cwd):
             for sub_directory in subdirs:
                 if '.git' in sub_directory or '.git' in root:
                     # TODO: This condition forces out the .git folder. Note that it only considers the current directory and the
@@ -54,10 +101,18 @@ class Notebook:
         print(self.filtered_months)
         print(self.filtered_days)
 
+        self.filtered_years.sort()
+        self.filtered_months.sort()
+        self.filtered_days.sort()
+
+        self.convertMarkdownEntries()
+
+        self.writeMainNotebook()
+
 
 def main():
-    #cwd = os.getcwd()
-    cwd = 'Users/jtoumey/CodeRepositories/active/labNotebook-uconn/'
+    cwd = os.getcwd()
+    #cwd = 'Users/jtoumey/CodeRepositories/active/labNotebook-uconn/'
     mainNotebook = Notebook(cwd)
 
     mainNotebook.generateNotebook()
