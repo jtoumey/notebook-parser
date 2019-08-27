@@ -2,6 +2,7 @@
 
 import subprocess, sys
 
+
 # class lineRecord:
 
 #     def __init__(self):
@@ -100,9 +101,13 @@ class inputNotebookEntry:
 
         outputEntry.close()
 
-def main():
+def parseEntry(source_file):
 
-    source_file = sys.argv[1]
+    # if sys.argv[1]:
+
+    #     source_file = sys.argv[1]
+
+    # else:
 
 
     markdownNotebookEntry = inputNotebookEntry(source_file)
@@ -113,5 +118,5 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    parseEntry()
 
