@@ -1,1 +1,4 @@
 *.DS_Store
+
+# Python compiled binaries
+*.pyc
