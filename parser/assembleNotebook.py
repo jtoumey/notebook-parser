@@ -27,6 +27,8 @@ class Notebook:
 
 \\maketitle
 
+\\tableofcontents
+
 """
     month_dict = {'01': 'JAN', '02': 'FEB', '03': 'MAR', '04': 'APR', '05': 'MAY', '06': 'JUN', '07': 'JUL', '08': 'AUG', '09': 'SEP', '10': 'OCT', '11': 'NOV', '12': 'DEC'}
     month_header_dict = {'01': 'January', '02': 'February', '03': 'March', '04': 'April', '05': 'May', '06': 'June', '07': 'July', '08': 'August', '09': 'September', '10': 'October', '11': 'November', '12': 'December'}
@@ -76,6 +78,7 @@ class Notebook:
 
                 month_header = self.month_header_dict[month]
 
+                main_nb.write('\\addcontentsline{toc}{section}{%s}\n' % (month_header))
                 main_nb.write('\\subsection*{%s}\n\n' % month_header)
 
                 for day in self.filtered_days:
@@ -85,8 +88,9 @@ class Notebook:
                         month_letter = self.month_dict[month]
                         date_string = day[6:8] +'-' + month_letter
 
-                        
-                        main_nb.write('\\subsubsection*{%s}\n\\input{%s}\n\n' % (date_string, filepath))
+                        # main_nb.write('\\addcontentsline{toc}{section}{%s}\n' % (date_string))
+                        main_nb.write('\\subsubsection*{%s}\n\\input{%s}\n' % (date_string, filepath))
+                        main_nb.write('\n\\noindent\\rule{\\textwidth}{0.4mm}\n\n')
 
 
         main_nb.write('\n\\end{document}\n')
