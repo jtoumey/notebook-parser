@@ -1,6 +1,7 @@
 # !/usr/bin/python
 
 import os
+import subprocess
 import fnmatch
 
 import parser
@@ -144,6 +145,12 @@ class Notebook:
 
         self.writeMainNotebook()
 
+    def compilePdfNotebook(self):
+        main_nb_path = self.cwd + '/mainNb_autoGen.tex'
+
+        print(main_nb_path)
+        subprocess.call(['pdflatex' + main_nb_path])
+
 
 def main():
     cwd = os.getcwd()
@@ -151,7 +158,7 @@ def main():
     mainNotebook = Notebook(cwd)
 
     mainNotebook.generateNotebook()
-    #mainNotebook.writeNotebook()
+    # mainNotebook.compilePdfNotebook()
 
 
 if __name__ == '__main__':
