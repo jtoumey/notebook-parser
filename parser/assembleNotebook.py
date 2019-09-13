@@ -100,47 +100,36 @@ class Notebook:
 
     def generateNotebook(self):
 
-        test_struct = []
+        yearly_record = {}
+        monthly_record = {}
 
-        # for (root, dirs, files) in os.walk('/Users/jtoumey/CodeRepositories/active/labNotebook-uconn', topdown=True):
-        for root, subdirs, files in os.walk(self.cwd):
-            for sub_directory in subdirs:
-                if '.git' in sub_directory or '.git' in root:
-                    # TODO: This condition forces out the .git folder. Note that it only considers the current directory and the
-                    # directory one level above. If such a condition is no longer met, this may fail. 
-                    continue
+        years = next(os.walk(self.cwd))[1]
 
-                elif '20' in sub_directory:
-                    # Here, we find a year folder (assuming I will not be maintaining this into the 2100s :O) and save 
-                    # to our list
-                    self.filtered_years.append(sub_directory)
+        # if '.git' in years:
+        years.remove('.git') 
 
-                    test_struct.append(sub_directory)
+        for year in years:
+            months = next(os.walk(self.cwd + '/' + year))[1]
 
-                # TODO: I don't think that two asterisks is the correct way for this wildcard. Look at the documentation to find out
-                # how to find a two-character wildcard
-                elif fnmatch.filter(sub_directory, '**'):
+            for month in months:
+                days = next(os.walk(self.cwd + '/' + year + '/' + month))[2]
 
-                    # Find month folders based on a two-character wildcard. This fails when the walk() command reaches into
-                    # the .git folder, where there are many two-character folders
-                    self.filtered_months.append(sub_directory)
+                filtered_days = []
 
-                    # test_struct[0].append(sub_directory)
+                for day in days:
+                    (base, ext) = os.path.splitext(day)
+                    if ext in ('.md'):
 
-            for daily_file in files:
-                (base, ext) = os.path.splitext(daily_file)
+                        filtered_days.append(day)
 
-                # Not solid, but we can assume the filename includes the month, which we may obtain from the root folder
-                expected_filename = sub_directory
+                filtered_days.sort()
 
-                if ext in ('.tex', '.md') and expected_filename in daily_file:
-                    # DEBUG full_name = os.path.join(root, daily_file) 
+                monthly_record[month] = filtered_days
 
-                    self.filtered_days.append(daily_file)
+            yearly_record[year] = monthly_record
 
-                    # test_struct[0][0].append(daily_file)
+            print yearly_record
 
-        print test_struct
 
         # DEBUG
         print(self.filtered_years)
