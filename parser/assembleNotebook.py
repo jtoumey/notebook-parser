@@ -39,6 +39,9 @@ class Notebook:
     filtered_months = list()
     filtered_days = list()
 
+    yearly_record = {}
+    monthly_record = {}
+
     daily_entry_matrix = list()
 
     def __init__(self, cwd_):
@@ -46,18 +49,18 @@ class Notebook:
 
     def convertMarkdownEntries(self):
 
-        for filename in self.filtered_days:
-            ext = filename.split('.')[1]
+        for year in self.yearly_record:
+            print year
 
-            print ext
+            for month in self.yearly_record[year]:
+                print '+++++++++++++'
+                for day in self.yearly_record[year][month]:
+                            
+                    filepath = self.cwd + '/' + year + '/' + month + '/' + day
+                    print filepath
 
-            if 'md' in ext: 
-                print filename
+                    parser.parseEntry(filepath)
 
-                filepath = self.cwd + '/' + self.filtered_years[0] + '/' + self.filtered_months[0] + '/' + filename
-                print filepath
-
-                parser.parseEntry(filepath)
 
     def writeMainNotebook(self):
 
@@ -100,12 +103,10 @@ class Notebook:
 
     def generateNotebook(self):
 
-        yearly_record = {}
-        monthly_record = {}
+        # Dictionaries which contain a list of our notebook entries
 
+        # Assume the CWD is our notebook directory. The subdirs (excluding .git/) are year folders
         years = next(os.walk(self.cwd))[1]
-
-        # if '.git' in years:
         years.remove('.git') 
 
         for year in years:
@@ -124,11 +125,11 @@ class Notebook:
 
                 filtered_days.sort()
 
-                monthly_record[month] = filtered_days
+                self.monthly_record[month] = filtered_days
 
-            yearly_record[year] = monthly_record
+            self.yearly_record[year] = self.monthly_record
 
-            print yearly_record
+        print self.yearly_record
 
 
         # DEBUG
