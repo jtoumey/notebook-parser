@@ -58,7 +58,6 @@ class Notebook:
                             
                     filepath = self.cwd + '/' + year + '/' + month + '/' + day
                     print filepath
-
                     parser.parseEntry(filepath)
 
 
@@ -74,27 +73,31 @@ class Notebook:
         # main_nb.write('\\documentclass{article} \n \\begin{document} \n')
         main_nb.write(self.preamble)
 
-        for year in self.filtered_years:
+        for year in self.yearly_record:
 
             main_nb.write('\\section*{%s}\n\n' % year)
 
-            for month in self.filtered_months:
+            for month in self.yearly_record[year]:
 
                 month_header = self.month_header_dict[month]
 
                 main_nb.write('\\addcontentsline{toc}{section}{%s}\n' % (month_header))
                 main_nb.write('\\subsection*{%s}\n\n' % month_header)
 
-                for day in self.filtered_days:
+                for day in self.yearly_record[year][month]:
 
-                    if '.tex' in day:
-                        filepath = year + '/' + month + '/' + day
-                        month_letter = self.month_dict[month]
-                        date_string = day[6:8] +'-' + month_letter
+                    # The day list only contains markdown files, but assuming that they've all been converted to TeX, swap the file extensions
+                    (base, ext) = os.path.splitext(day)
+                    day = base + '.tex'
 
-                        # main_nb.write('\\addcontentsline{toc}{section}{%s}\n' % (date_string))
-                        main_nb.write('\\subsubsection*{%s}\n\\input{%s}\n' % (date_string, filepath))
-                        main_nb.write('\n\\noindent\\rule{\\textwidth}{0.4mm}\n\n')
+                    # if '.tex' in day:
+                    filepath = year + '/' + month + '/' + day
+                    month_letter = self.month_dict[month]
+                    date_string = day[6:8] +'-' + month_letter
+
+                    # main_nb.write('\\addcontentsline{toc}{section}{%s}\n' % (date_string))
+                    main_nb.write('\\subsubsection*{%s}\n\\input{%s}\n' % (date_string, filepath))
+                    main_nb.write('\n\\noindent\\rule{\\textwidth}{0.4mm}\n\n')
 
 
         main_nb.write('\n\\end{document}\n')
