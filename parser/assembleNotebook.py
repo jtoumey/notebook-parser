@@ -100,6 +100,8 @@ class Notebook:
 
     def generateNotebook(self):
 
+        test_struct = []
+
         # for (root, dirs, files) in os.walk('/Users/jtoumey/CodeRepositories/active/labNotebook-uconn', topdown=True):
         for root, subdirs, files in os.walk(self.cwd):
             for sub_directory in subdirs:
@@ -113,6 +115,8 @@ class Notebook:
                     # to our list
                     self.filtered_years.append(sub_directory)
 
+                    test_struct.append(sub_directory)
+
                 # TODO: I don't think that two asterisks is the correct way for this wildcard. Look at the documentation to find out
                 # how to find a two-character wildcard
                 elif fnmatch.filter(sub_directory, '**'):
@@ -120,6 +124,8 @@ class Notebook:
                     # Find month folders based on a two-character wildcard. This fails when the walk() command reaches into
                     # the .git folder, where there are many two-character folders
                     self.filtered_months.append(sub_directory)
+
+                    # test_struct[0].append(sub_directory)
 
             for daily_file in files:
                 (base, ext) = os.path.splitext(daily_file)
@@ -131,6 +137,10 @@ class Notebook:
                     # DEBUG full_name = os.path.join(root, daily_file) 
 
                     self.filtered_days.append(daily_file)
+
+                    # test_struct[0][0].append(daily_file)
+
+        print test_struct
 
         # DEBUG
         print(self.filtered_years)
