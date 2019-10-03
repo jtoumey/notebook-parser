@@ -115,6 +115,8 @@ class Notebook:
         for year in years:
             months = next(os.walk(self.cwd + '/' + year))[1]
 
+
+
             for month in months:
                 days = next(os.walk(self.cwd + '/' + year + '/' + month))[2]
 
@@ -130,8 +132,18 @@ class Notebook:
 
                 self.monthly_record[month] = filtered_days
 
-            self.yearly_record[year] = self.monthly_record
+            old_key = 00
+            for key in self.monthly_record:
+                if key < old_key:
 
+                    self.monthly_record[old_key] = self.monthly_record.pop(key) 
+                else:
+                    continue
+                old_key = key
+                print key, 'corresponds to', self.monthly_record[key]
+
+            self.yearly_record[year] = self.monthly_record
+            print self.yearly_record
         print self.yearly_record
 
 
